@@ -2,7 +2,6 @@
 - name: Create a login user
   user:
     name: daan
-    password: '123321'
     groups: # Empty by default, here we give it some groups
     - docker
     - sudo

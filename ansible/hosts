@@ -1,7 +1,8 @@
 [all:vars]
 ansible_connection=ssh
-ansible_user=ssh
+ansible_user=root
 ansible_ssh_pass=odroid
+ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
 
-[all]
+[odroid]
 192.168.178.10

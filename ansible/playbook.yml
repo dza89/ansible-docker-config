@@ -1,10 +1,10 @@
 - hosts: all
 
   roles:
-    - bootstrap
-    - docker
-    - sshd
     - kernel
+    #- docker
+    #- sshd
+
 
   tasks:
     - name: Cleanup

@@ -1,44 +1,30 @@
+# https://wiki.odroid.com/odroid-xu4/software/building_kernel
+- apt:
+    pkg:
+      - git 
+      - gcc 
+      - g++ 
+      - build-essential 
+      - libssl-dev 
+      - bc
+
 - git:
     repo: 'https://github.com/hardkernel/linux.git'
-    dest: /tmp/
+    dest: /tmp/linux
     version: odroid-5.4.y
     depth: 1
 
 - name: Update kernel and Device Tree Blob
-  make:
-    chdir: /temp/linux
-    target: odroidxu4_defconfig
-
-- name: Update kernel and Device Tree Blob
-  make:
-    chdir: /temp/linux
-    target: -j8
-
-- name: Update kernel and Device Tree Blob
-  make:
-    chdir: /temp/linux
-    target: modules_install
-
-- name: Update kernel and Device Tree Blob
-  copy:
-    src: /temp/linux/arch/arm/boot/zImage
-    dest: /media/boot
-    remote_src: no
-
-- name: Update kernel and Device Tree Blob
-  copy:
-    src: /temp/linux/arch/arm/boot/dts/exynos5422-odroid*dtb
-    dest: /media/boot
-    remote_src: no
-
-- name: sync cache with persistent storage
-  command: sync
-
-- name: Update kernel and Device Tree Blob
-  copy:
-    src: /temp/linux/arch/arm/boot/dts/exynos5422-odroid*dtb
-    dest: /media/boot
-    remote_src: no
+  shell: |
+    cd /tmp/linux
+    make odroidxu4_defconfig
+    make -j8
+    sudo make modules_install
+    sudo cp -f arch/arm/boot/zImage /media/boot
+    sudo cp -f arch/arm/boot/dts/exynos5422-odroidxu3.dtb /media/boot
+    sudo cp -f arch/arm/boot/dts/exynos5422-odroidxu4.dtb /media/boot
+    sudo cp -f arch/arm/boot/dts/exynos5422-odroidxu3-lite.dtb /media/boot
+    sync
 
 - name: Updating root ramdisk
   shell: |
