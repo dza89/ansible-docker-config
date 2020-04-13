@@ -1,0 +1,7 @@
+[all:vars]
+ansible_connection=ssh
+ansible_user=ssh
+ansible_ssh_pass=odroid
+
+[all]
+192.168.178.10

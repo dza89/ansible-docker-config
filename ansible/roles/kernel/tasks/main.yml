@@ -1,0 +1,53 @@
+- git:
+    repo: 'https://github.com/hardkernel/linux.git'
+    dest: /tmp/
+    version: odroid-5.4.y
+    depth: 1
+
+- name: Update kernel and Device Tree Blob
+  make:
+    chdir: /temp/linux
+    target: odroidxu4_defconfig
+
+- name: Update kernel and Device Tree Blob
+  make:
+    chdir: /temp/linux
+    target: -j8
+
+- name: Update kernel and Device Tree Blob
+  make:
+    chdir: /temp/linux
+    target: modules_install
+
+- name: Update kernel and Device Tree Blob
+  copy:
+    src: /temp/linux/arch/arm/boot/zImage
+    dest: /media/boot
+    remote_src: no
+
+- name: Update kernel and Device Tree Blob
+  copy:
+    src: /temp/linux/arch/arm/boot/dts/exynos5422-odroid*dtb
+    dest: /media/boot
+    remote_src: no
+
+- name: sync cache with persistent storage
+  command: sync
+
+- name: Update kernel and Device Tree Blob
+  copy:
+    src: /temp/linux/arch/arm/boot/dts/exynos5422-odroid*dtb
+    dest: /media/boot
+    remote_src: no
+
+- name: Updating root ramdisk
+  shell: |
+    cd /tmp/
+    cp .config /boot/config-$(make kernelrelease)
+    update-initramfs -c -k $(make kernelrelease)
+    mkimage -A arm -O linux -T ramdisk -C none -a 0 -e 0 -n uInitrd -d /boot/initrd.img-$(make kernelrelease) /boot/uInitrd-$(make kernelrelease)
+    cp /boot/uInitrd-`make kernelrelease` /media/boot/uInitrd
+    sync
+
+- name: Unconditionally reboot the machine with all defaults
+  reboot:

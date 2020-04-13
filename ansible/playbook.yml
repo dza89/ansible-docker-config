@@ -1,0 +1,14 @@
+- hosts: all
+
+  roles:
+    - bootstrap
+    - docker
+    - sshd
+    - kernel
+
+  tasks:
+    - name: Cleanup
+      command: rm -rf /tmp/* 
+    
+    - name: Cleanup
+      command: rm -rf /tmp/**/
