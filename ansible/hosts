@@ -5,4 +5,4 @@ ansible_ssh_pass=odroid
 ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
 
 [odroid]
-192.168.178.10
+node1 ansible_ssh_host=192.168.178.10
