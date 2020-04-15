@@ -1,0 +1,13 @@
+version: '3'
+services:
+  homeassistant:
+    container_name: home-assistant
+    image: homeassistant/armhf-homeassistant
+    volumes:
+      - ./config:/config
+    environment:
+      - TZ=Europe/Amsterdam
+    restart: always
+    #network_mode: host
+    ports:
+     - 8123:8123

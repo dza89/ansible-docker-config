@@ -1,0 +1,60 @@
+version: "3.7"
+
+services:
+  whoami:
+    image: "containous/whoami"
+    container_name: "simple-service"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`maxgeheugentrainer.com`)"
+      - "traefik.http.routers.whoami.entrypoints=websecure"
+      - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"      
+  traefik:
+    container_name: traefik      
+    command:
+      - '--log.level=DEBUG'
+      - '--providers.docker.exposedbydefault=false'
+      - '--entrypoints.web.address=:80'
+      - '--entrypoints.websecure.address=:443'
+      - '--providers.docker.endpoint=tcp://dockerproxy:2375'
+      - '--providers.docker.network=traefik'
+      - '--providers.docker=true'
+      - '--certificatesresolvers.letsencrypt.acme.email=dhapotter@gmail.com'
+      - '--certificatesresolvers.letsencrypt.acme.httpchallenge=true'
+      - '--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web'
+      - '--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json'
+    image: traefik:2.1.6
+    networks:
+      - traefik 
+    ports:
+     - 80:80
+     - 443:443
+    restart: always
+    volumes:
+      - "letsencrypt:/letsencrypt/"
+     #- '/var/run/docker.sock:/var/run/docker.sock:ro'
+        #    labels:
+      # global redirect to https
+      #- 'traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)'
+      #- 'traefik.http.routers.http-catchall.entrypoints=web'
+      #- 'traefik.http.routers.http-catchall.middlewares=redirect-to-https'
+      #- 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
+
+      # global wildcard certificates
+      #- 'traefik.http.routers.wildcard-certs.tls.certresolver=letsencrypt'
+      #- 'traefik.http.routers.wildcard-certs.tls.domains[0].main=maxgeheugentrainer.com'
+      #- 'traefik.http.routers.wildcard-certs.tls.domains[0].sans=*.maxgeheugentrainer.com'
+
+      # dashboard
+      #- 'traefik.http.routers.traefik.rule=Host(`traefik.maxgeheugentrainer.com`)'
+      #- 'traefik.http.routers.traefik.tls=true'
+      #- 'traefik.http.routers.traefik.entrypoints=websecure'
+        #- 'traefik.http.routers.traefik.service=api@internal'
+        #- 'traefik.http.routers.traefik.middlewares=authtraefik'
+        #- 'traefik.http.middlewares.authtraefik.basicauth.users=removed'
+       
+networks:
+  traefik:
+    external: true
+volumes:
+  letsencrypt:

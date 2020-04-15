@@ -1,0 +1,42 @@
+version: '3' 
+
+services:
+  db:
+    image: turgon37/armhf-mariadb
+    command: mysqld --binlog-format=ROW
+    container_name: nextcloud-mariadb
+    networks:
+      - backend
+    volumes:
+      - db:/var/lib/mysql
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - MYSQL_ROOT_PASSWORD=dummy
+      - MYSQL_PASSWORD=dummy
+      - MYSQL_DATABASE=dummy
+      - MYSQL_USER=dummy
+    restart: unless-stopped
+  
+  app:
+    image: nextcloud:latest
+    container_name: nextcloud-app
+    networks:
+      - traefik
+      - backend  
+    depends_on:
+      - db
+    volumes:
+      - /mnt/nextcloud:/var/www/html
+      - ./config:/var/www/html/config
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    ports:
+            - 6663:80
+
+volumes:
+  db:
+
+networks:
+  traefik:
+        external: true
+  backend:      
