@@ -1,24 +1,24 @@
 ---
 #https://github.com/vitalk/ansible-secure-ssh/tree/master
 - name: Add identity key to authorized keys on host
-  authorized_key: user={{ ssh_user }}
+  authorized_key: user=daan
     key="{{ lookup('file', ssh_identity_key) }}"
   register: add_identity_key
-  when: ssh_identity_key is defined and ssh_user is defined
+  key: '{{ item }}'
+  with_file:
+    - public_keys/pc_id_rsa.pub
+    - public_keys/dell_id_rsa.pub
 
 - name: Disable empty password login
   lineinfile: dest={{ sshd_config }} regexp="^#?PermitEmptyPasswords" line="PermitEmptyPasswords no"
-  notify: restart sshd
 
 - name: Disable remote root login
   lineinfile: dest={{ sshd_config }} regexp="^#?PermitRootLogin" line="PermitRootLogin no"
-  notify: restart sshd
 
-- name: Disable password login
+  - name: Disable password login
   lineinfile: dest={{ sshd_config }} regexp="^(#\s*)?PasswordAuthentication " line="PasswordAuthentication no"
   when: add_identity_key is succeeded and not add_identity_key is skipped
-  notify: restart sshd
 
-- name: Enable PAM
+  - name: Enable PAM
   lineinfile: dest={{ sshd_config }} regexp="^#?UsePAM" line="UsePAM yes"
   notify: restart sshd
