@@ -2,9 +2,9 @@
   become: true
 
   roles:
-    #- kernel
     - docker
-    #- sshd
+    - bootstrap
+    - sshd
 
 
   tasks:

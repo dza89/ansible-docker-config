@@ -1,7 +1,13 @@
 ---
+
+- name: Install required system packages
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: ['hdparm', 'vim']
+  
 - name: Create a login user
   user:
     name: daan
+    password: {{ upassword | password_hash('sha512') }}
     groups: # Empty by default, here we give it some groups
     - docker
     - sudo
