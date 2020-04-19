@@ -4,5 +4,3 @@ sshd: ssh
 
 # Where is ssh config is located at
 sshd_config: /etc/ssh/sshd_config
-ssh_user: daan
-ssh_identity_key: /id_rsa.pub

@@ -2,7 +2,7 @@
 #https://github.com/vitalk/ansible-secure-ssh/tree/master
 - name: Add identity key to authorized keys on host
   authorized_key:
-    user: daan
+    user: {{ uusername }}
     state: present
     key: '{{ item }}'
   register: add_identity_key
