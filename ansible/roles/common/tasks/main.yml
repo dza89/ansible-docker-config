@@ -15,11 +15,6 @@
         system: no             # Defaults to no
         createhome: yes        # Defaults to yes
     
-    - name: add git in docker to bashrc
-      lineinfile:
-        path: /home/{{ uusername }}/.bashrc
-        line: function git () { (docker run -ti --rm -v ${HOME}:/root -v $(pwd):/git alpine/git "$@")}    
-
   - name: Set timezone to Europe/Amsterdam
     timezone:
      name: Europe/Amsterdam
