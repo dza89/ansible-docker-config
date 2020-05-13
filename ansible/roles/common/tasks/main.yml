@@ -19,3 +19,7 @@
       lineinfile:
         path: /home/{{ uusername }}/.bashrc
         line: function git () { (docker run -ti --rm -v ${HOME}:/root -v $(pwd):/git alpine/git "$@")}    
+
+  - name: Set timezone to Europe/Amsterdam
+    timezone:
+     name: Europe/Amsterdam
