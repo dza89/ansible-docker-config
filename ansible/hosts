@@ -1,8 +1,0 @@
-[all:vars]
-ansible_connection=ssh
-ansible_user=root
-ansible_ssh_pass=K#j403jd3
-ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
-
-[odroid]
-node1 ansible_ssh_host=192.168.178.10

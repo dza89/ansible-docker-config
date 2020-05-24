@@ -3,7 +3,7 @@
 
   roles:
     - docker
-    - bootstrap
+    - common
     - sshd
 
 
