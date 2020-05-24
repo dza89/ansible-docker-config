@@ -22,8 +22,15 @@
     block: |
       export PGID="{{ user.group }}"
       export PUID="{{ user.uid }}"
-    insertbefore: BOF
+    insertafter: EOF
     create: yes 
+
+- openssh_keypair:
+  become: yes
+  become_method: su
+  become_user: "{{ uusername }}"
+    path: "{{ user.home }}/.ssh/id_rsa"
+
   
 - name: Set timezone
   timezone:
