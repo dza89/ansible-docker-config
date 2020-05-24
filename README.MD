@@ -19,16 +19,19 @@ export \
     ansible_user='' \
     ansible_password='' \
 # for example Europe/Amsterdam
-    timezone=''
+    timezone='' \
+# for example /dev/sda1, if empty, does nothing
+    docker_partition='' \
 # your own user credentials
-    UUSERNAME='' \
-    UPASSWORD='' \
+    uusername='' \
+    upassword='' \
 # address of the server
     ansible_ssh_host=''
 
 docker run --rm -t --network host -e ANSIBLE_HOST_KEY_CHECKING=False \
         -w /ansible -v $(pwd)/ansible:/ansible \
         willhallonline/ansible:2.9-alpine ansible-playbook playbook.yml -vvv \
-            --extra-vars "upassword=${UPASSWORD} uusername=${UUSERNAME} ansible_password=${ansible_password} \
-                        ansible_ssh_host=${ansible_ssh_host} ansible_user=${ansible_user} timezone=${timezone}
+            --extra-vars "upassword=${upassword} uusername=${uusername} ansible_password=${ansible_password} \
+                        ansible_ssh_host=${ansible_ssh_host} ansible_user=${ansible_user} \
+                        docker_partition=${docker_partition} timezone=${timezone}
 ```

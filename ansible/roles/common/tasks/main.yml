@@ -15,16 +15,16 @@
     system: no       
     createhome: yes     
   register: user  
-    
-- name: Set timezone
-  timezone:
-    name: "{{ timezone }}"
 
-- name: Ensure virtualenv is sourced from the .bashrc
+- name: expose user PGID and PUID for containers
   blockinfile:
-    dest: "{{ ansible_env.HOME }}/.bashrc"
+    dest: "{{ user.home }}/.bashrc"
     block: |
       export PGID="{{ user.group }}"
       export PUID="{{ user.uid }}"
     insertbefore: BOF
     create: yes 
+  
+- name: Set timezone
+  timezone:
+    name: "{{ timezone }}"

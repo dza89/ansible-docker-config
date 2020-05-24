@@ -25,16 +25,27 @@
         - docker
         - docker-compose
 
-- stat:
-    path: /mnt/docker
-  register: docker_partition
+block: # untested
+when: docker_partition != ""
+
+  - name: create mnt dir
+    file:
+      path: /mnt/docker
+      state: directory
+
+  - name: Mount up device
+    mount:
+      path: /mnt/docker
+      src: "{{ docker_partition }}"
+      fstype: ext4
+      state: present
  
-- name: Add custom docker storage location
-  copy:
-    src: files/daemon.json
-    dest: /etc/docker/daemon.json
-    owner: root
-    group: root
-  when: docker_partition.stat.islnk is defined
+  - name: Add custom docker storage location
+    copy:
+      src: files/daemon.json
+      dest: /etc/docker/daemon.json
+      owner: root
+      group: root
+    when: docker_partition.stat.islnk is defined
 
      
