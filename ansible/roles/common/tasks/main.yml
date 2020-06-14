@@ -35,3 +35,8 @@
 - name: Set timezone
   timezone:
     name: "{{ timezone }}"
+
+- name: create spindown policy for all spinning drives
+  copy:
+    src: 69-hdparm.rules
+    dest: /etc/udev/rules.d/69-hdparm.rules
