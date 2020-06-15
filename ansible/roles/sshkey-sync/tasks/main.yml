@@ -1,51 +1,35 @@
-# https://github.com/do-community/ansible-playbooks/blob/master/docker_ubuntu1804/playbook.yml
-- name: Install aptitude using apt
-  apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+# https://github.com/shoenig/ssh-key-sync
+- name: Create keys dir
+  file:
+    path: /opt/keys
+    state: directory
 
-- name: Install required system packages
-  apt: name={{ item }} state=latest update_cache=yes
-  loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+- name: Generate config json
+  template:
+    src:  files/config.json.tmpl
+    dest: /opt/keys/config.json
 
-- name: Add Docker GPG apt Key
-  apt_key:
-    url: https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg
-    state: present
+- name: get source files 
+  command: docker build -t ssh-key-sync files
 
-- name: Add Docker Repository
-  apt_repository:
-    repo: deb https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
-    state: present
+- name: get source files 
+  command: docker run --name ssh-key-sync ssh-key-sync
 
-- name: Update apt and install docker-ce
-  apt: update_cache=yes name=docker-ce state=latest
+- name: retrieve binary
+  command: docker cp ssh-key-sync:/go/bin/ssh-key-sync /opt/keys/ssh-key-sync
 
-- name: Install Docker Module for Python
-  pip:
-    name: 
-        - docker
-        - docker-compose
+- name: copy service file
+  copy:
+    src: files/ssh-key-sync.service
+    dest: /etc/systemd/system/ssh-key-sync.service
 
-block: # untested
-when: docker_partition != ""
+- name: copy timer file
+  copy:
+    src: files/ssh-key-sync.timer
+    dest: /etc/systemd/system/ssh-key-sync.timer
 
-  - name: create mnt dir
-    file:
-      path: /mnt/docker
-      state: directory
-
-  - name: Mount up device
-    mount:
-      path: /mnt/docker
-      src: "{{ docker_partition }}"
-      fstype: ext4
-      state: present
- 
-  - name: Add custom docker storage location
-    copy:
-      src: files/daemon.json
-      dest: /etc/docker/daemon.json
-      owner: root
-      group: root
-    when: docker_partition.stat.islnk is defined
-
-     
+- name: enable a timer for ssh key sync
+  systemd:
+    name: ssh-key-sync.timer
+    state: started
+    enabled: yes

@@ -1,11 +1,11 @@
 {
     "system": [
-        {"user": "daan", "authorized_keys_file": "/home/daan/.ssh/authorized_keys"}
+        {"user": "{{ system_username }}", "authorized_keys_file": "/home/{{ system_username }}/.ssh/authorized_keys"}
     ],
     "github": {
         "url": "api.github.com",
         "accounts": [
-            {"username": "dza89", "system_user": "daan"}
+            {"username": "{{ github_username }}", "system_user": "{{ system_username }}"}
         ]
     }
 }
