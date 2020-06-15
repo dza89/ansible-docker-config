@@ -9,10 +9,15 @@
     src:  files/config.json.tmpl
     dest: /opt/keys/config.json
 
-- name: get source files 
-  command: docker build -t ssh-key-sync files
+- name: copy service file
+  copy:
+    src: files/Dockerfile
+    dest: /opt/keys/Dockerfile
 
-- name: get source files 
+- name: compile binary
+  command: docker build -t ssh-key-sync /opt/keys/
+
+- name: create binary
   command: docker run --name ssh-key-sync ssh-key-sync
 
 - name: retrieve binary

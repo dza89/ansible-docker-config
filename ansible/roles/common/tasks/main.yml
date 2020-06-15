@@ -16,6 +16,13 @@
     createhome: yes     
   register: user  
 
+- name: generate a userkeys
+  openssh_keypair:
+    become: yes
+    become_method: su
+    become_user: "{{ system_username }}"
+    path: "{{ user.home }}/.ssh/id_rsa"
+
 - name: expose user PGID and PUID for containers
   blockinfile:
     dest: "{{ user.home }}/.bashrc"
@@ -24,12 +31,6 @@
       export PUID="{{ user.uid }}"
     insertafter: EOF
     create: yes 
-
-- openssh_keypair:
-  become: yes
-  become_method: su
-  become_user: "{{ system_username }}"
-    path: "{{ user.home }}/.ssh/id_rsa"
 
 - name: Set timezone
   timezone:
