@@ -22,16 +22,18 @@ export \
     timezone='' \
 # for example /dev/sda1, if empty, does nothing
     docker_partition='' \
-# your own user credentials
-    uusername='' \
-    upassword='' \
+# your own user credentials in plaintext
+    system_username='' \
+    system_password='' \
 # address of the server
-    ansible_ssh_host=''
+    ansible_ssh_host='' \
+# github username, all public_keys will be synced with the server every hour
+    github_username=''
 
 docker run --rm -t --network host -e ANSIBLE_HOST_KEY_CHECKING=False \
         -w /ansible -v $(pwd)/ansible:/ansible \
         willhallonline/ansible:2.9-alpine ansible-playbook playbook.yml -vvv \
-            --extra-vars "upassword=${upassword} uusername=${uusername} ansible_password=${ansible_password} \
-                        ansible_ssh_host=${ansible_ssh_host} ansible_user=${ansible_user} \
+            --extra-vars "system_password=${system_password} system_username=${system_username} ansible_password=${ansible_password} \
+                        ansible_ssh_host=${ansible_ssh_host} ansible_user=${ansible_user} github_username=${github_username} \
                         docker_partition=${docker_partition} timezone=${timezone}
 ```

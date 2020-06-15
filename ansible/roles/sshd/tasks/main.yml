@@ -1,13 +1,5 @@
 ---
 #https://github.com/vitalk/ansible-secure-ssh/tree/master
-- name: Add identity key to authorized keys on host
-  authorized_key:
-    user: "{{ uusername }}"
-    state: present
-    key: '{{ item }}'
-  register: add_identity_key
-  with_fileglob:
-    - public_keys/*
 
 - name: Disable empty password login
   lineinfile: dest={{ sshd_config }} regexp="^#?PermitEmptyPasswords" line="PermitEmptyPasswords no"

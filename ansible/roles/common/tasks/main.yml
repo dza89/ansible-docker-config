@@ -5,8 +5,8 @@
   
 - name: Create a login user
   user:
-    name: "{{ uusername }}"
-    password: "{{ upassword | password_hash('sha512') }}"
+    name: "{{ system_username }}"
+    password: "{{ system_password | password_hash('sha512') }}"
     groups:
     - docker
     - sudo
@@ -28,10 +28,9 @@
 - openssh_keypair:
   become: yes
   become_method: su
-  become_user: "{{ uusername }}"
+  become_user: "{{ system_username }}"
     path: "{{ user.home }}/.ssh/id_rsa"
 
-  
 - name: Set timezone
   timezone:
     name: "{{ timezone }}"
