@@ -40,14 +40,9 @@
         fstype: ext4
         state: present
   
-    - name: Add custom docker storage location
-      copy:
-        src: files/daemon.json
-        dest: /etc/docker/daemon.json
-        owner: root
-        group: root
-      when: docker_partition.stat.islnk is defined
-
   when: docker_partition == True
 
-     
+- name: Generate config json
+  template:
+    src:  files/daemon.json.tmpl
+    dest: /etc/docker/daemon.json

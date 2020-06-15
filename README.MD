@@ -2,22 +2,17 @@
 
 ## prerequisites
 
-
 This repository sets up most devices with ansible, based on debian or ubuntu:
-* installs docker
-* sets up public key sync with your github account
+
+* install docker
+* set up public key sync with your github account
 * adds just a few basic tools (hdparm, vim, git)
 * hardens de ssh daemon
 
-!! After running this, you're not able to run it again, because it removes the possiblity to run ssh as root.
+!! After running this, you're not able to run it again, because it removes the possiblity to run ssh as root and login with password.
    If you want to add stuff don't run the sshd role yet.
 
-Make sure:
-- to replace the public keys in ansible/roles/sshd/public_keys
-
-Additionaly:
-- mount a separate partition on /mnt/docker, and it will use that as rootvolume for docker
-
+!! Be sure to have to have public keys on github 
 
 Have docker installed on your local machine:
 
@@ -40,7 +35,8 @@ github_username=''
 docker run --rm -t --network host -e ANSIBLE_HOST_KEY_CHECKING=False \
         -w /ansible -v $(pwd)/ansible:/ansible \
         willhallonline/ansible:2.9-alpine ansible-playbook playbook.yml \
-            --extra-vars "system_password=${system_password} system_username=${system_username} ansible_password=${ansible_password} \
-                        ansible_ssh_host=${ansible_ssh_host} ansible_user=${ansible_user} github_username=${github_username} \
-                        docker_partition=${docker_partition} timezone=${timezone}"
+            --extra-vars "ansible_ssh_host=${ansible_ssh_host} ansible_user=${ansible_user} ansible_password=${ansible_password} \
+                          system_username=${system_username} system_password=${system_password} \
+                          github_username=${github_username} docker_partition=${docker_partition} timezone=${timezone}"
+                          
 ```
