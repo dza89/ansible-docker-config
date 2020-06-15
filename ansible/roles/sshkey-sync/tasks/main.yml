@@ -1,0 +1,51 @@
+# https://github.com/do-community/ansible-playbooks/blob/master/docker_ubuntu1804/playbook.yml
+- name: Install aptitude using apt
+  apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+
+- name: Install required system packages
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg
+    state: present
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
+    state: present
+
+- name: Update apt and install docker-ce
+  apt: update_cache=yes name=docker-ce state=latest
+
+- name: Install Docker Module for Python
+  pip:
+    name: 
+        - docker
+        - docker-compose
+
+block: # untested
+when: docker_partition != ""
+
+  - name: create mnt dir
+    file:
+      path: /mnt/docker
+      state: directory
+
+  - name: Mount up device
+    mount:
+      path: /mnt/docker
+      src: "{{ docker_partition }}"
+      fstype: ext4
+      state: present
+ 
+  - name: Add custom docker storage location
+    copy:
+      src: files/daemon.json
+      dest: /etc/docker/daemon.json
+      owner: root
+      group: root
+    when: docker_partition.stat.islnk is defined
+
+     
