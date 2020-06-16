@@ -14,21 +14,20 @@
     src: files/Dockerfile
     dest: /opt/keys/Dockerfile
 
-- name: compile binary
-  command: docker build -t ssh-key-sync /opt/keys/
-
-- name: create binary
-  command: docker run --name ssh-key-sync ssh-key-sync
-
-- name: retrieve binary
-  command: docker cp ssh-key-sync:/go/bin/ssh-key-sync /opt/keys/ssh-key-sync
+- name: compile and place binary
+  command: "{{ item }}"
+  loop:
+    - docker build -t ssh-key-sync /opt/keys/
+    - docker run --name ssh-key-sync ssh-key-sync
+    - docker cp ssh-key-sync:/go/bin/ssh-key-sync /opt/keys/ssh-key-sync
 
 - name: cleanup
-  command: docker image rm golang:1.13-stretch
+  command: "{{ item }}"
+  loop:
+    - docker container rm -f ssh-key-sync
+    - docker image rm ssh-key-sync:latest
+    - docker image rm golang:1.13-stretch
 
-- name: cleanup
-  command: docker image rm ssh-key-sync:latest
-  
 - name: copy service file
   copy:
     src: files/ssh-key-sync.service
@@ -39,7 +38,7 @@
     src: files/ssh-key-sync.timer
     dest: /etc/systemd/system/ssh-key-sync.timer
 
-- name: enable a timer for ssh key sync
+- name: enable service
   systemd:
     name: ssh-key-sync.timer
     state: started
