@@ -23,6 +23,12 @@
 - name: retrieve binary
   command: docker cp ssh-key-sync:/go/bin/ssh-key-sync /opt/keys/ssh-key-sync
 
+- name: cleanup
+  command: docker image rm golang:1.13-stretch
+
+- name: cleanup
+  command: docker image rm ssh-key-sync:latest
+  
 - name: copy service file
   copy:
     src: files/ssh-key-sync.service
