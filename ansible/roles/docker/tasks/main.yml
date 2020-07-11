@@ -26,20 +26,11 @@
         - docker-compose
 
 - name: configure docker daemon
-  block: 
-  
-    - name: create mnt dir
-      file:
-        path: /mnt/docker
-        state: directory
-
-    - name: Mount up device
-      mount:
-        path: /mnt/docker
-        src: "{{ docker_partition }}"
-        fstype: ext4
-        state: present
-  
+  mount:
+    path: /var/lib/docker
+    src: "{{ docker_partition }}"
+    fstype: ext4
+    state: present
   when: docker_partition == True
 
 - name: Generate config json

@@ -1,8 +1,5 @@
 {
     "log-driver": "json-file",
     "log-opts": {"max-size": "10m", "max-file": "3"},
-    {% if docker_partition %}
-    "data-root": "/mnt/docker",
-    {% endif %}
     "live-restore": true
 }
