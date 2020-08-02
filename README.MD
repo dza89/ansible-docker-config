@@ -2,17 +2,14 @@
 
 ## prerequisites
 
-This repository sets up most devices with ansible, based on debian or ubuntu:
+This repository sets up any debian based os with ansible:
 
 * install docker
 * set up public key sync with your github account
 * adds just a few basic tools (hdparm, vim, git)
 * hardens de ssh daemon
 
-!! After running this, you're not able to run it again, because it removes the possiblity to run ssh as root and login with password.
-   If you want to add stuff don't run the sshd role yet.
-
-!! Be sure to have to have public keys on github 
+!! Be sure to have public keys on github 
 
 Have docker installed on your local machine:
 
