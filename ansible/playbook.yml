@@ -2,14 +2,7 @@
   become: true
 
   roles:
-   # - docker
-  #  - common
+   - docker
+   - common
     - sshkey-sync
     - sshd
-
-  tasks:
-    - name: Cleanup
-      file: rm -rf /tmp/* 
-    
-    - name: Cleanup
-      command: rm -rf /tmp/**/

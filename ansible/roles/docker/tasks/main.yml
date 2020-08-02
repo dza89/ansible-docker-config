@@ -19,21 +19,21 @@
 - name: Update apt and install docker-ce
   apt: update_cache=yes name=docker-ce state=latest
 
-- name: Install Docker Module for Python
-  pip:
-    name: 
-        - docker
-        - docker-compose
+- name: Add docker-compose as a container
+  copy:
+    src: files/run.sh
+    dest: /usr/local/bin/docker-compose
+    mode: '0751'
 
-- name: configure docker daemon
+- name: configure docker partition
   mount:
     path: /var/lib/docker
     src: "{{ docker_partition }}"
     fstype: ext4
     state: present
-  when: docker_partition == True
+  when: docker_partition is defined
 
-- name: Generate config json
+- name: Generate docker config json
   template:
     src:  files/daemon.json.tmpl
     dest: /etc/docker/daemon.json

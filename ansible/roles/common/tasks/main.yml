@@ -15,12 +15,6 @@
     createhome: yes     
   register: user  
 
-- name: Set authorized keys taken from url
-  authorized_key:
-    user: "{{ user.name }}"
-    state: present
-    key: "https://github.com/{{ github_username }}.keys"
-
 - name: expose user PGID and PUID for containers
   blockinfile:
     dest: "{{ user.home }}/.bashrc"
