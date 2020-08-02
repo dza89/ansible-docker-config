@@ -1,15 +1,13 @@
-# Init
-
-## prerequisites
+# Configuring your machines for docker
 
 This repository sets up any debian based os with ansible:
 
-* install docker
+* installs docker
 * set up public key sync with your github account
 * adds just a few basic tools (hdparm, vim, git)
 * hardens de ssh daemon
 
-!! Be sure to have public keys on github 
+!! Be sure to have public keys on github or you will have to wait an hour after you upload them. 
 
 Have docker installed on your local machine:
 
