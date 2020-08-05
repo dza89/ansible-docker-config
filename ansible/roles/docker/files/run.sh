@@ -1,5 +1,6 @@
 #!/bin/sh
-# from https://raw.githubusercontent.com/docker/compose/master/script/run/run.sh
+#
+# Forked from https://github.com/docker/compose/blob/master/script/run/run.sh
 #
 # Run docker-compose in a container
 #
@@ -12,13 +13,16 @@
 # You can add additional volumes (or any docker run options) using
 # the $COMPOSE_OPTIONS environment variable.
 #
+# You can set a specific image tag from Docker Hub, such as "1.26.2-ls9", or "alpine"
+# using the $DOCKER_COMPOSE_IMAGE_TAG environment variable (defaults to "latest")
+#
 
 
 set -e
 
-VERSION="1.26.1"
-IMAGE="docker/compose:$VERSION"
-
+# set image tag to latest if not globally set
+DOCKER_COMPOSE_IMAGE_TAG="${DOCKER_COMPOSE_IMAGE_TAG:-latest}"
+IMAGE="linuxserver/docker-compose:$DOCKER_COMPOSE_IMAGE_TAG"
 
 # Setup options for connecting to docker host
 if [ -z "$DOCKER_HOST" ]; then
@@ -38,9 +42,6 @@ fi
 if [ -n "$COMPOSE_FILE" ]; then
     COMPOSE_OPTIONS="$COMPOSE_OPTIONS -e COMPOSE_FILE=$COMPOSE_FILE"
     compose_dir=$(realpath "$(dirname "$COMPOSE_FILE")")
-fi
-if [ -n "$COMPOSE_PROJECT_NAME" ]; then
-    COMPOSE_OPTIONS="-e COMPOSE_PROJECT_NAME $COMPOSE_OPTIONS"
 fi
 # TODO: also check --file argument
 if [ -n "$compose_dir" ]; then
@@ -62,6 +63,11 @@ DOCKER_RUN_OPTIONS="$DOCKER_RUN_OPTIONS -i"
 # Handle userns security
 if docker info --format '{{json .SecurityOptions}}' 2>/dev/null | grep -q 'name=userns'; then
     DOCKER_RUN_OPTIONS="$DOCKER_RUN_OPTIONS --userns=host"
+fi
+
+# Detect SELinux and add --privileged if necessary
+if docker info --format '{{json .SecurityOptions}}' 2>/dev/null | grep -q 'name=selinux'; then
+    DOCKER_RUN_OPTIONS="$DOCKER_RUN_OPTIONS --privileged"
 fi
 
 # shellcheck disable=SC2086
