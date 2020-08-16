@@ -4,5 +4,5 @@
   roles:
    - docker
    - common
-    - sshkey-sync
-    - sshd
+   - sshkey-sync
+   - sshd
