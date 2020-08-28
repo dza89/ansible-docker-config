@@ -1,4 +1,11 @@
 # https://github.com/shoenig/ssh-key-sync
+- name: Make sure authorized_keys exists
+  file:
+    path: /home/{{ system_username }}/.ssh/authorized_keys"
+    owner: {{ system_username }}
+    group: {{ system_username }}
+    mode: '0660'
+
 - name: Create keys dir
   file:
     path: /opt/keys
