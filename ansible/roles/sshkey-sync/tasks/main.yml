@@ -16,7 +16,7 @@
     src:  files/config.json.tmpl
     dest: /opt/keys/config.json
 
-- name: copy service file
+- name: copy docker file
   copy:
     src: files/Dockerfile
     dest: /opt/keys/Dockerfile

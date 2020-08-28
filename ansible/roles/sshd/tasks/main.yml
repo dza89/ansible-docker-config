@@ -1,4 +1,15 @@
 ---
+- name: find
+  lineinfile: 
+    dest: /home/{{ system_username }}/.ssh/authorized_keys
+    line: "managed by ssh-key-sync"
+  check_mode: yes
+  register: presence
+
+- fail:
+    msg: "No github keys inserted into authorized keys, continuing will result in being locked out"
+  when: presence.changed
+
 #https://github.com/vitalk/ansible-secure-ssh/tree/master
 
 - name: Disable empty password login
