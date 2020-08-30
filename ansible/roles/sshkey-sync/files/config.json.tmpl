@@ -1,6 +1,6 @@
 {
     "system": [
-        {"user": "{{ system_username }}", "authorized_keys_file": "{{ user.home }}/.ssh/authorized_keys"}
+        {"user": "{{ system_username }}", "authorized_keys_file": "/home/{{ system_username }}/.ssh/authorized_keys"}
     ],
     "github": {
         "url": "api.github.com",
