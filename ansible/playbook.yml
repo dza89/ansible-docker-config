@@ -3,6 +3,6 @@
 
   roles:
    - docker
-   - common
+   - common  
    - sshkey-sync
    - sshd

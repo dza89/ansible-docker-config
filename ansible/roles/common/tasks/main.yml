@@ -1,4 +1,9 @@
 ---
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+    
 - name: Install required system packages
   apt: name={{ item }} state=latest update_cache=yes
   loop: ['hdparm', 'vim', 'git']

@@ -15,6 +15,7 @@ Have docker installed on your local machine:
 # creds for ansible to setup ssh connection
 ansible_user=''
 ansible_password=''
+# ansible_sudo_pass var is necessary when using a nonroot user
 # for example Europe/Amsterdam
 timezone=''
 # for example /dev/sda1, if empty, does nothing
