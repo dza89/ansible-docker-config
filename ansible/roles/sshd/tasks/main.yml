@@ -5,7 +5,7 @@
 - name: find
   lineinfile: 
     dest: /home/{{ system_username }}/.ssh/authorized_keys
-    line: "managed by ssh-key-sync"
+    line: "# managed by ssh-key-sync"
   check_mode: yes
   register: presence
 
