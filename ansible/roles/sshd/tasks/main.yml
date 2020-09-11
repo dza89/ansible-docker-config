@@ -1,4 +1,7 @@
 ---
+- pause:
+    seconds: 30
+
 - name: find
   lineinfile: 
     dest: /home/{{ system_username }}/.ssh/authorized_keys
