@@ -1,6 +1,13 @@
- - name: bootstrap docker
+# doesn't work with 20.04 as there is no package yet
+- name: bootstrap docker
    shell: curl -s get.docker.io | bash
 
+- name: Add docker-compose as a container
+  copy:
+    src: files/run.sh
+    dest: /usr/local/bin/docker-compose
+    mode: '0755'
+    
 - name: configure docker partition
   mount:
     path: /var/lib/docker
