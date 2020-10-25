@@ -31,7 +31,7 @@
       export PGID="{{ user.group }}"
       export PUID="{{ user.uid }}"
       export TZ="{{ timezone }}"
-      export COMPOSE_OPTIONS="-e TIMEZONE=${TZ} -e PGID=${PGID} -e PUID=${PUID}"
+      export COMPOSE_OPTIONS="-e TZ=${TZ} -e PGID=${PGID} -e PUID=${PUID}"
     insertafter: EOF
     create: yes 
 
