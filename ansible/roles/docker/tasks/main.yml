@@ -2,12 +2,18 @@
 - name: bootstrap docker
    shell: curl -s get.docker.io | bash
 
-- name: Add docker-compose as a container
-  copy:
-    src: files/run.sh
+- name: Add docker-compose as a container script
+  get_url:
+    url: https://raw.githubusercontent.com/linuxserver/docker-docker-compose/master/run.sh 
     dest: /usr/local/bin/docker-compose
     mode: '0755'
-    
+
+- name: add docker cli completion
+  command: curl -L https://raw.githubusercontent.com/docker/docker-ce/v$(docker -v | cut -d' ' -f3 | tr -d '\-ce,')/components/cli/contrib/completion/bash/docker > /etc/bash_completion.d/docker
+
+- name: add docker-compose cli completion
+  command: curl -L https://raw.githubusercontent.com/docker/compose/$(docker-compose version --short)/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose
+
 - name: configure docker partition
   mount:
     path: /var/lib/docker

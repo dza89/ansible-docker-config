@@ -3,16 +3,16 @@
   file: 
     path: /home/{{ user.home }}/.ssh/ 
     state: directory
-    group: "{{ user.name }}"
-    owner: "{{ user.group }}"
+    group: "{{ user.group }}"
+    owner: "{{ user.name }}"
 
 - name: ensure authorized_keys exists
   copy:
     content: ""
     dest: "{{ user.home }}/.ssh/authorized_keys"
     force: no
-    group: "{{ user.name }}"
-    owner: "{{ user.group }}"
+    group: "{{ user.group }}"
+    owner: "{{ user.name }}"
     mode: 0660
 
 - name: Create keys dir
