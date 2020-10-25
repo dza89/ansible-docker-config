@@ -2,9 +2,9 @@
 
 This repository sets up any debian based os with ansible:
 
-* installs docker
+* installs docker and docker-compose-as-a-container
 * set up public key sync with your github account
-* adds just a few basic tools (hdparm, vim, git)
+* adds a few basic tools (vim, git)
 * hardens de ssh daemon
 
 !! Be sure to have public keys on github or you will have to wait an hour after you upload them. 
@@ -27,12 +27,14 @@ system_password=''
 ansible_ssh_host=''
 # github username, all public_keys will be synced with the server every hour
 github_username=''
+# creates a spindown policy and installs hdparm when set to true
+hdd_usage=
 
 docker run --rm -t --network host -e ANSIBLE_HOST_KEY_CHECKING=False \
         -w /ansible -v $(pwd)/ansible:/ansible \
         willhallonline/ansible:2.9-alpine ansible-playbook playbook.yml \
             --extra-vars "ansible_ssh_host=${ansible_ssh_host} ansible_user=${ansible_user} ansible_password=${ansible_password} \
-                          system_username=${system_username} system_password=${system_password} \
+                          system_username=${system_username} system_password=${system_password} hdd_usage=${hdd_usage} \
                           github_username=${github_username} docker_partition=${docker_partition} timezone=${timezone}"
                           
 ```

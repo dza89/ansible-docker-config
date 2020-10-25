@@ -1,8 +1,9 @@
 ---
-- pause:
+- name: wait for first ssh key sync
+  pause:
     seconds: 30
 
-- name: find
+- name: check if sync has run before hardening ssh daemon
   lineinfile: 
     dest: /home/{{ system_username }}/.ssh/authorized_keys
     line: "# managed by ssh-key-sync"
@@ -13,8 +14,7 @@
     msg: "No github keys inserted into authorized keys, continuing will result in being locked out"
   when: presence.changed
 
-#https://github.com/vitalk/ansible-secure-ssh/tree/master
-
+# https://github.com/vitalk/ansible-secure-ssh/tree/master
 - name: Disable empty password login
   lineinfile: dest={{ sshd_config }} regexp="^#?PermitEmptyPasswords" line="PermitEmptyPasswords no"
 

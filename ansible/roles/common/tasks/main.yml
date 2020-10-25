@@ -6,7 +6,7 @@
     
 - name: Install required system packages
   apt: name={{ item }} state=latest update_cache=yes
-  loop: ['hdparm', 'vim', 'git']
+  loop: ['vim', 'git']
   
 - name: Create a login user
   user:
@@ -20,20 +20,34 @@
     createhome: yes     
   register: user  
 
-- name: expose user PGID and PUID for containers
+- name: Set timezone
+  timezone:
+    name: "{{ timezone }}"
+
+- name: expose user PGID and PUID for (docker-compose) container
   blockinfile:
     dest: "{{ user.home }}/.bashrc"
     block: |
       export PGID="{{ user.group }}"
       export PUID="{{ user.uid }}"
+      export TZ="{{ timezone }}"
+      export COMPOSE_OPTIONS="-e TIMEZONE=${TZ} -e PGID=${PGID} -e PUID=${PUID}"
     insertafter: EOF
     create: yes 
 
-- name: Set timezone
-  timezone:
-    name: "{{ timezone }}"
+block: hdd
 
-- name: create spindown policy for all spinning drives
-  copy:
-    src: 69-hdparm.rules
-    dest: /etc/udev/rules.d/69-hdparm.rules
+  - name: Install hdparm
+    apt: name={{ item }} state=latest update_cache=yes
+      loop: ['hdparm']
+
+  - name: get path hdparm
+    shell: "which hdparm"
+    register: hdparm_path
+
+  - name: Add spindown policy
+    template:
+      src:  69-hdparm.rules.tmpl
+      dest: /etc/udev/rules.d/69-hdparm.rules
+
+when: {{ hdd_usage }} == true

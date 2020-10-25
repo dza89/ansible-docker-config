@@ -1,18 +1,18 @@
 # https://github.com/shoenig/ssh-key-sync
 - name: ensure .ssh exists
   file: 
-    path: /home/{{ system_username }}/.ssh/ 
+    path: /home/{{ user.home }}/.ssh/ 
     state: directory
-    group: "{{ system_username }}"
-    owner: "{{ system_username }}"
+    group: "{{ user.name }}"
+    owner: "{{ user.group }}"
 
 - name: ensure authorized_keys exists
   copy:
     content: ""
-    dest: "/home/{{ system_username }}/.ssh/authorized_keys"
+    dest: "{{ user.home }}/.ssh/authorized_keys"
     force: no
-    group: "{{ system_username }}"
-    owner: "{{ system_username }}"
+    group: "{{ user.name }}"
+    owner: "{{ user.group }}"
     mode: 0660
 
 - name: Create keys dir
